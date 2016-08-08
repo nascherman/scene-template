@@ -1,42 +1,58 @@
+global.THREE = require('three');
+require('three-first-person-controls')(THREE);
+
 const createApp = require('./');
 const createLoop = require('raf-loop');
 const path = require('path');
-global.THREE = require('three');
-
-let geometry = new THREE.SphereGeometry(20, 50, 50);
-let mesh1 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
-  color: 0xff0000
-}));
+const MTLLoader = require('three-mtl-loader');
+const OBJLoader = require('jser-three-obj-loader')(THREE);
+const mtlLoader = new MTLLoader();
+let loader = new THREE.OBJLoader();
+mtlLoader.setBaseUrl('./assets/');
+mtlLoader.setPath('./assets/');
 let light = new THREE.AmbientLight(0xffffff, 1.5);
+mtlLoader.load('spider.mtl', (matl) => {
+  matl.preload();
+  loader.setMaterials(matl);
+  loader.load('./assets/spider.obj', function(obj) {
+    createScene(obj);
+  });
+});
 
-const opts = {
-  renderer: {
-    antialias: true
-  },
-  controls: {
-    theta: 50 * Math.PI / 180,
-    phi: -50 * Math.PI / 180,
-    distance: 60
-  },
-  objects: [
-    mesh1,
-    light
-  ]
+function createScene(obj) {
+
+  const opts = {
+    renderer: {
+      antialias: true
+    },
+    controls: {
+      type: 'orbit'
+    },
+    objects: [
+      obj,
+      light
+    ],
+    camera: {
+      far: 100000
+    }
+  };
+  // Create our basic ThreeJS application
+  const {
+    renderer,
+    camera,
+    scene,
+    updateControls
+  } = createApp(opts);
+  camera.far = 10000;
+  // for threejs inspector
+  window.scene = scene;
+  renderer.setClearColor(0xffffff);
+  // Start our render loop
+  createLoop((dt) => {
+    // update time in seconds
+    // material.uniforms.time.value += dt / 1000;
+    // render
+    updateControls();
+    renderer.render(scene, camera);
+  }).start();
 }
-// Create our basic ThreeJS application
-const {
-  renderer,
-  camera,
-  scene,
-  updateControls
-} = createApp(opts);
-// for threejs inspector
-window.scene = scene;
-// Start our render loop
-createLoop((dt) => {
-  // update time in seconds
-  // material.uniforms.time.value += dt / 1000;
-  // render
-  updateControls();
-  renderer.render(window.scene, camera);
-}).start();

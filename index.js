@@ -1,12 +1,14 @@
-
 /*
   This is a generic "ThreeJS Application"
   helper which sets up a renderer and camera
   controls.
  */
-const createControls = require('orbit-controls');
+const THREE = require('three');
+const createOrbitControls = require('orbit-controls');
+require('three-first-person-controls')(THREE);
+require('three-fly-controls')(THREE);
 const assign = require('object-assign');
-const THREE = require('three')
+let controls, clock;
 
 function createApp (opt = {}) {
   const dpr = window.devicePixelRatio;
@@ -27,13 +29,45 @@ function createApp (opt = {}) {
   const target = new THREE.Vector3();
   // 3D scene
   const scene = new THREE.Scene();
-  // 3D orbit controller with damping
-  const controls = createControls(assign({
+  
+  if (opt.controls.type === 'fly'){
+    controls = new THREE.FlyControls(camera);
+    clock =  new THREE.Clock();
+    assign(controls, {
+      movementSpeed: 10.0,
+      domElement: canvas,
+      rollSpeed: Math.PI / 36,
+      autoForward: false,
+      dragToLook: true
+    });
+  }
+  else if (opt.controls.type === 'first-person') {
+    controls = new THREE.FirstPersonControls(camera);
+    clock =  new THREE.Clock();
+    assign(controls, {
+      lookSpeed: 0.4,
+      movementSpeed: 20,
+      noFly: true,
+      lookVertical: true,
+      constraintVertical: true,
+      verticalMin: 1.0,
+      verticalMax: 2.0,
+      lon: -150,
+      lat: 120
+    });
+  }
+  else if(opt.controls.type === 'orbit'){
+    // 3D orbit controller with damping
+    controls = createOrbitControls(assign({
     canvas,
-    theta: 40 * Math.PI / 180,
-    phi: -60 * Math.PI / 180,
-    distance: 75
-  }, opt.controls));
+      theta: 40 * Math.PI / 180,
+      phi: -60 * Math.PI / 180,
+      distance: 75
+    }, opt.controls));
+  }
+  else throw new Error('You must specify a control type');
+
+  var updateControls = opt.controls.type === 'orbit' ? updateControlsOrbit : updateControls;
   // Update frame size
   window.addEventListener('resize', resize);
   // Setup initial size
@@ -49,7 +83,7 @@ function createApp (opt = {}) {
     canvas
   };
 
-  function updateControls () {
+  function updateControlsOrbit () {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const aspect = width / height;
@@ -63,6 +97,15 @@ function createApp (opt = {}) {
     camera.updateProjectionMatrix();
   }
 
+  function updateControls () {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const aspect = width / height;
+    // update camera controls
+    var delta = clock.getDelta();
+    controls.update(delta);
+  }
+
   function resize () {
     renderer.setSize(window.innerWidth, window.innerHeight);
     updateControls();
@@ -73,6 +116,7 @@ function createApp (opt = {}) {
       scene.add(obj);
     })
   }
+
 }
 
 module.exports = createApp;

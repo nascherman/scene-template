@@ -1,6 +1,6 @@
 {
   "name": "scene-template",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "a quick template for threejs scene",
   "main": "index.js",
   "scripts": {

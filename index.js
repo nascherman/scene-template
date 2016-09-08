@@ -3,14 +3,12 @@
   helper which sets up a renderer and camera
   controls.
  */
-const THREE = require('three');
-const createOrbitControls = require('orbit-controls');
-require('three-first-person-controls')(THREE);
-require('three-fly-controls')(THREE);
-const assign = require('object-assign');
-let controls, clock;
-
-function createApp (opt = {}) {
+function createApp (opt = {}, THREE) {
+  const createOrbitControls = require('orbit-controls');
+  require('three-first-person-controls')(THREE);
+  require('three-fly-controls')(THREE);
+  const assign = require('object-assign');
+  let controls, clock;
   const dpr = window.devicePixelRatio;
   const renderer = new THREE.WebGLRenderer(assign({
     antialias: true // default enabled

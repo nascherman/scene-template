@@ -1,6 +1,5 @@
 # scene-template
 
-
 A threejs scene template based on work by [@mattdesl](https://twitter.com/mattdesl). Used to quickly generate a scene for demos or other. 
 
 ## Usage
@@ -41,5 +40,5 @@ const {
   camera,
   scene,
   updateControls
-} = createApp(opts);
+} = createApp(opts, THREE);
 ```

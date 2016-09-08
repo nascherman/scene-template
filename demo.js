@@ -1,6 +1,4 @@
 global.THREE = require('three');
-require('three-first-person-controls')(THREE);
-
 const createApp = require('./');
 const createLoop = require('raf-loop');
 const path = require('path');

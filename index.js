@@ -17,7 +17,7 @@ function createApp (opt = {}, THREE) {
   // Show the <canvas> on screen
   const canvas = renderer.domElement;
   if(opt.domElement) {
-    domElement.appendChild(canvas);
+    opt.domElement.appendChild(canvas);
   }
   else {
     document.body.appendChild(canvas);

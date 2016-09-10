@@ -25,6 +25,7 @@ opts = {
     phi: -50 * Math.PI / 180,
     distance: 60
   },
+  domElement: document.body,
   // add any initial objects to the scene if you want
   objects: [
     mesh1,

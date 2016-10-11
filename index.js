@@ -26,7 +26,7 @@ function createApp (opt = {}, THREE) {
   const camera = new THREE.PerspectiveCamera(60, 1, 0.01, 1000);
   const target = new THREE.Vector3();
   // 3D scene
-  const scene = new THREE.Scene();
+  const scene = opt.scene ? opt.scene : new THREE.Scene();
   
   if (opt.controls.type === 'fly'){
     controls = new THREE.FlyControls(camera);

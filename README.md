@@ -18,6 +18,8 @@ opts = {
   renderer: {
     antialias: true
   },
+  width: 500, // dimensions of the renderer, defaults to window size
+  height: 500,
   // controls. Can be 'fly' or 'first-person' controls as well 
   controls: {
     type: 'orbit', 
@@ -26,7 +28,7 @@ opts = {
     distance: 60
   },
   domElement: document.body,
-  // add any initial objects to the scene if you want
+  // add any initial objects to the scene
   objects: [
     mesh1,
     light

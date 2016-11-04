@@ -10,6 +10,8 @@ function createApp (opt = {}, THREE) {
   const assign = require('object-assign');
   let controls, clock;
   const dpr = window.devicePixelRatio;
+  var globalWidth = opt.width || window.innerWidth;
+  var globalHeight = opt.height || window.innerHeight;
   const renderer = new THREE.WebGLRenderer(assign({
     antialias: true // default enabled
   }, opt.renderer));
@@ -26,7 +28,7 @@ function createApp (opt = {}, THREE) {
   const camera = new THREE.PerspectiveCamera(60, 1, 0.01, 1000);
   const target = new THREE.Vector3();
   // 3D scene
-  const scene = opt.scene ? opt.scene : new THREE.Scene();
+  const scene = new THREE.Scene();
   
   if (opt.controls.type === 'fly'){
     controls = new THREE.FlyControls(camera);
@@ -82,8 +84,8 @@ function createApp (opt = {}, THREE) {
   };
 
   function updateControlsOrbit () {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const width = globalWidth;
+    const height = globalHeight;
     const aspect = width / height;
     // update camera controls
     controls.update();
@@ -96,8 +98,8 @@ function createApp (opt = {}, THREE) {
   }
 
   function updateControls () {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const width = globalWidth;
+    const height = globalHeight;
     const aspect = width / height;
     // update camera controls
     var delta = clock.getDelta();
@@ -105,7 +107,7 @@ function createApp (opt = {}, THREE) {
   }
 
   function resize () {
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(globalWidth, globalHeight);
     updateControls();
   }
 
